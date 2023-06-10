@@ -6,17 +6,23 @@ public class Enemy : MonoBehaviour
 {
     private int wayPointCount;             //이동 경로 개수
     private Transform[] wayPoints;         //이동 경로 정보
+    private Transform aggregationPoint;         //집합 위치 정보
+
     private int currentIndex = 0;          //현재 목표지점 인텍스
     private Movement2D movement2D;         //오브젝트 이동 제어
+    private bool isReady=true;         //오브젝트 이동 제어
 
-    public void Setup(Transform[] wayPoints)
+
+    public void Setup(Transform[] wayPoints, Transform aggregationPoint)
     {
+        isReady = false;
         movement2D = GetComponent<Movement2D>();
 
         // 적 이동 경로 Waypoints 정보 설정
         wayPointCount = wayPoints.Length;
         this.wayPoints = new Transform[wayPointCount]; //Transform wayPointCount만큼 배열크기생성
         this.wayPoints = wayPoints;
+        this.aggregationPoint = aggregationPoint;
 
         //적의 위치를 첫번째 wayPoint 위치로 설정
         transform.position= wayPoints[currentIndex].position;
@@ -38,7 +44,7 @@ public class Enemy : MonoBehaviour
             //적의 현재위치와 목표위치의 거리가 0.02 *moveMent2DMoveSpeed보다 작을때 if 조건문 실행
             //Tip movement2D.MoveSpeed를 곱해주는 이유는 속도가 빠르면 한 프레임에 0.02보다 크게 움직이기 떄문에
             // if 조건문에 걸리지 않고 경로를 탈주하는 오브젝트가 발생할수 있음
-            if(Vector3.Distance(transform.position, wayPoints[currentIndex].position)<0.02f*movement2D.MoveSpeed)
+            if(Vector3.Distance(transform.position, wayPoints[currentIndex].position)<0.06f*movement2D.MoveSpeed)
             {
                 //다음 이동 방향 설정
                 NextMoveTo();
@@ -62,17 +68,12 @@ public class Enemy : MonoBehaviour
         else
         {
             //적 오브젝트 삭제
-            Destroy(gameObject);
+            // Destroy(gameObject);
+            isReady = true;
+            transform.position= wayPoints[wayPointCount - 1].position;
+            movement2D.Dead(aggregationPoint.position);
         }
     }
-    void Start()
-    {
-        
-    }
+    public bool IsReady => isReady;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
