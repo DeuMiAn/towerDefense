@@ -29,7 +29,7 @@ public class Movement2D : MonoBehaviour
     {
         isStop=true;
     }
-    public void Dead(Vector3 direction)
+    public void setPosition(Vector3 direction)
     {
         isStop = true;
         transform.position = direction;

@@ -14,17 +14,23 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private Transform[] wayPoints;      // 현재 스테이지의 이동 경로
     [SerializeField]
-    private Transform aggregationPoint;
+    private Transform aggregationPoint; 
+
+    private List<Enemy> enemyList;// 현재 맵에 존재하는 모든 적의 정보
+
+    //적의 생성과 삭제는 EnemySpawner에서 하기때문에 set은 필요없음
+    public List<Enemy> EnemyList=>enemyList;
 
     private GameObject[] enemys;
 
     private void Awake()
     {
-        enemys=new GameObject[createNum];
+        enemyList= new List<Enemy>();
+        enemys =new GameObject[createNum];
         Vector3 position = aggregationPoint.position;
         for (int i = 0; i < createNum; i++)
         {
-            enemys[i] = Instantiate(enemyPrefab);
+            enemys[i] = Instantiate(enemyPrefab, transform);
             enemys[i].transform.position = position;
         }
         //적 생성 코루틴 함수 호출
@@ -44,10 +50,18 @@ public class EnemySpawner : MonoBehaviour
 
             Enemy enemy =clone.GetComponent<Enemy>();            //방금 생성된 적의 Enemy 컴포넌트
 
-            enemy.Setup(wayPoints, aggregationPoint);                             //wayPoint 정보를 매개변수로 Setup() 호출
+            enemy.Setup(this,wayPoints, aggregationPoint);                             //wayPoint 정보를 매개변수로 Setup() 호출
+            enemyList.Add(enemy);
 
             yield return new WaitForSeconds(spawnTime);         //spawnTime 시간 동안 대기
         }
+    }
+    public void DestroyEnemy(Enemy enemy)
+    {
+        // 리스트에서 사망하는 적 정보 삭제
+        enemyList.Remove(enemy);
+        //적 오브젝트 삭제
+        enemy.OnDie();
     }
 
 }

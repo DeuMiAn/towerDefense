@@ -11,12 +11,14 @@ public class Enemy : MonoBehaviour
     private int currentIndex = 0;          //현재 목표지점 인텍스
     private Movement2D movement2D;         //오브젝트 이동 제어
     private bool isReady=true;         //오브젝트 이동 제어
+    private EnemySpawner enemySpawner; // 적의 삭제를본인이 하지 않고 EnemySpawner에 알려서 삭제함
 
 
-    public void Setup(Transform[] wayPoints, Transform aggregationPoint)
+    public void Setup( EnemySpawner enemySpawner, Transform[] wayPoints, Transform aggregationPoint)
     {
         isReady = false;
         movement2D = GetComponent<Movement2D>();
+        this.enemySpawner = enemySpawner;
 
         // 적 이동 경로 Waypoints 정보 설정
         wayPointCount = wayPoints.Length;
@@ -36,7 +38,7 @@ public class Enemy : MonoBehaviour
         //다음 이동 방향 설정
         NextMoveTo();
 
-        while (true)
+        while (!isReady)
         {
             //적 오브젝트 회전
             transform.Rotate(Vector3.forward * 10);
@@ -56,6 +58,7 @@ public class Enemy : MonoBehaviour
 
     private void NextMoveTo()
     {
+        if (isReady) return;
         //아직 이동한 wayPoints가 남아 있다면
         if(currentIndex < wayPointCount-1) {
             //적의 위치를 정확하게 목표 위치로 설정
@@ -69,11 +72,16 @@ public class Enemy : MonoBehaviour
         {
             //적 오브젝트 삭제
             // Destroy(gameObject);
-            isReady = true;
-            transform.position= wayPoints[wayPointCount - 1].position;
-            movement2D.Dead(aggregationPoint.position);
+            OnDie();
         }
     }
     public bool IsReady => isReady;
+
+    public void OnDie()
+    {
+        isReady = true;
+        currentIndex = 0;
+        movement2D.setPosition(aggregationPoint.position);
+    }
 
 }
