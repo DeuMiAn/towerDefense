@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour
         isDie = true;
         currentIndex = 0;
         movement2D.setPosition(aggregationPoint.position);
-        //enemySpawner.DestroyEnemy(this);
+        enemySpawner.DestroyEnemy(this);
     }
 
 

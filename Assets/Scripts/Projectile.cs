@@ -6,11 +6,13 @@ public class Projectile : MonoBehaviour
 {
     private Movement2D movement2D;
     private Enemy target;
+    private float damage;
 
-    public void Setup(Enemy target)
+    public void Setup(Enemy target,float damage)
     {
         movement2D=GetComponent<Movement2D>();
         this.target = target;
+        this.damage = damage;
     }
     // Update is called once per frame
     void Update()
@@ -32,7 +34,10 @@ public class Projectile : MonoBehaviour
     {
         if (!collision.CompareTag("Enemy")) return; //적이 아닌 대상과 부딪히면
         if (collision.transform != target.transform) return; //현재 tartget인 적이 아닐 때
-        collision.GetComponent<Enemy>().OnDie(); //적 사망 함수 호출
+
+
+        collision.GetComponent<EnemyHP>().TakeDamage(damage);//적 체력을 damage만큼 감소
+        //collision.GetComponent<Enemy>().OnDie(); //적 사망 함수 호출
         Destroy(gameObject); //발사체 오브젝트 삭제
     }
 }
