@@ -17,7 +17,7 @@ public class TowerWeapon : MonoBehaviour
     [SerializeField]
     private float attackRange = 2.0f;           //공격범위
     private WeaponState weaponState=WeaponState.SearchTarget; //타워 무기의 상태
-    private Transform attackTarget = null;                    //공격 대상
+    private Enemy attackTarget = null;                    //공격 대상
     private EnemySpawner enemySpawner;                        //게임에 존재하는 적 정보 획득용
 
     public void Setup(EnemySpawner enemySpawner)
@@ -40,7 +40,7 @@ public class TowerWeapon : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if(attackTarget != null)
+        if(attackTarget != null&& attackTarget.IsDie==false)
         {
             RotateToTarget();
         }
@@ -52,8 +52,8 @@ public class TowerWeapon : MonoBehaviour
         //원점으로부터의 거리와 수평축으로부터의 각도를 이용해 위치를 구하는 극 좌표계 이용
         // 각도=arctan(y/x)
         // x,y 변위값 구하기
-        float dx= attackTarget.position.x-transform.position.x;
-        float dy= attackTarget.position.y-transform.position.y;
+        float dx= attackTarget.transform.position.x-transform.position.x;
+        float dy= attackTarget.transform.position.y-transform.position.y;
         //x,y 변위값을 바탕으로 각도 구하기
         // 각도가 radian 단위이기 때문에 Mathf.Rad2Deg를 곱해 도 단위를 구함
         float degree = Mathf.Atan2(dy,dx)*Mathf.Rad2Deg;
@@ -73,11 +73,11 @@ public class TowerWeapon : MonoBehaviour
                 if (distance <= attackRange && distance <= closestDistSqr)
                 {
                     closestDistSqr = distance;
-                    attackTarget = enemySpawner.EnemyList[i].transform;
+                    attackTarget = enemySpawner.EnemyList[i];
                 }
 
             }
-            if(attackTarget!=null)
+            if(attackTarget!=null && attackTarget.IsDie == false)
             {
                 ChangeState(WeaponState.AttackToTarget);
             }
@@ -91,12 +91,12 @@ public class TowerWeapon : MonoBehaviour
         while(true)
         {
             //1. tartget이 있는지 검사 (다른 발사체에 의해 제거, Goal 지점까지 이동해 삭제등)
-            if (attackTarget == null)
+            if (attackTarget == null|| attackTarget.IsDie)
             {
                 ChangeState(WeaponState.SearchTarget); break;
             }
             //2. target이 공격 범위 안에 있는지 검사(공격 범위를 벗어나면 새로운 적 탐색)
-            float distance =Vector3.Distance(attackTarget.position, transform.position);
+            float distance =Vector3.Distance(attackTarget.transform.position, transform.position);
             if (distance > attackRange)
             {
                 attackTarget = null;
@@ -105,7 +105,6 @@ public class TowerWeapon : MonoBehaviour
 
             //3. attackRage 시간만큼 대기
             yield return new WaitForSeconds(attackRate);
-
             //4. 공격 (발사체 생성)
             SpawnProjectile();
         }

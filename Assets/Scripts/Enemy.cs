@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -11,6 +12,8 @@ public class Enemy : MonoBehaviour
     private int currentIndex = 0;          //현재 목표지점 인텍스
     private Movement2D movement2D;         //오브젝트 이동 제어
     private bool isReady=true;         //오브젝트 이동 제어
+    [SerializeField]
+    private bool isDie = false;         //오브젝트 이동 제어
     private EnemySpawner enemySpawner; // 적의 삭제를본인이 하지 않고 EnemySpawner에 알려서 삭제함
 
 
@@ -76,12 +79,17 @@ public class Enemy : MonoBehaviour
         }
     }
     public bool IsReady => isReady;
+    public bool IsDie => isDie;
+
 
     public void OnDie()
     {
-        isReady = true;
+        isReady = false;
+        isDie = true;
         currentIndex = 0;
         movement2D.setPosition(aggregationPoint.position);
+        //enemySpawner.DestroyEnemy(this);
     }
+
 
 }
