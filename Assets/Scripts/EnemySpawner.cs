@@ -18,7 +18,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private Transform[] wayPoints;      // 현재 스테이지의 이동 경로
     [SerializeField]
-    private Transform aggregationPoint; 
+    private Transform aggregationPoint;
+    [SerializeField]
+    private PlayerHP playerHP;
+    [SerializeField]
+    private PlayerGold playerGold;        //플레이어 골드 컴포넌트
 
     private List<Enemy> enemyList;// 현재 맵에 존재하는 모든 적의 정보
 
@@ -62,8 +66,20 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(spawnTime);         //spawnTime 시간 동안 대기
         }
     }
-    public void DestroyEnemy(Enemy enemy)
+    public void DestroyEnemy(EnemyDestroyType type ,Enemy enemy, int gold)
     {
+        //적이 목표지점까지 도착하면
+        if (type == EnemyDestroyType.Arrive)
+        {
+            //플레이어 체력-1
+            playerHP.TakeDamage(1);
+        }
+        //적이 플레이어의 발사체에게 사망했을시
+        else if(type==EnemyDestroyType.Kill)
+        {
+            //적의 종류에 따라 사망시 골드 획득
+            playerGold.CurrentGold += gold;
+        }
         // 리스트에서 사망하는 적 정보 삭제
         enemyList.Remove(enemy);
         //적 오브젝트 삭제
