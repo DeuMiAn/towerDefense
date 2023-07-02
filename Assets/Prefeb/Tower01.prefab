@@ -99,11 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 363e8b4f95d62ad4b8552c4ece55b6c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  towerTemplate: {fileID: 11400000, guid: 73100b68cf947794aba9d48b681dffa3, type: 2}
   projectilPrefab: {fileID: 6708049997339963762, guid: 430d25ad86fafdd47bdf90634fa08aa9, type: 3}
   spawnPoint: {fileID: 2166237614180091564}
-  attackRate: 0.5
-  attackRange: 2
-  attackDamage: 1
 --- !u!65 &7498381355772350603
 BoxCollider:
   m_ObjectHideFlags: 0

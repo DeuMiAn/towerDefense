@@ -2347,6 +2347,7 @@ MonoBehaviour:
   textRange: {fileID: 440408936}
   textLevel: {fileID: 1440540556}
   towerAttackRange: {fileID: 1738071584}
+  buttonUpgrade: {fileID: 1860278476}
 --- !u!1 &453532131
 GameObject:
   m_ObjectHideFlags: 0
@@ -5078,7 +5079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9732c129589ca44a638ad2ce5865bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGold: 200
+  currentGold: 1000
 --- !u!1 &952278442
 GameObject:
   m_ObjectHideFlags: 0
@@ -5540,8 +5541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a8ad6a052e62849a4130c758939822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 1421505198563024711, guid: 1368f17f8444997499e156c0ca4efa36, type: 3}
-  towerBuildGold: 50
+  towerTemplate: {fileID: 11400000, guid: 73100b68cf947794aba9d48b681dffa3, type: 2}
   enemySpawner: {fileID: 1676928818}
   playerGold: {fileID: 951722680}
 --- !u!4 &1046852155
@@ -8832,7 +8832,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1860278477}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 450158173}
+        m_TargetAssemblyTypeName: TowerDataViewer, Assembly-CSharp
+        m_MethodName: OnClickEventTowerUpgrade
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1860278477
 MonoBehaviour:
   m_ObjectHideFlags: 0
