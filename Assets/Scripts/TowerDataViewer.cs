@@ -21,6 +21,8 @@ public class TowerDataViewer : MonoBehaviour
     private TowerAttackRange towerAttackRange;
     [SerializeField]
     private Button buttonUpgrade;
+    [SerializeField]
+    private SystemTextViewer systemTextViewer;
 
 
     private TowerWeapon currentTower;
@@ -78,6 +80,7 @@ public class TowerDataViewer : MonoBehaviour
 
         //업그레이드가 불가능해지면 버튼 비활성화
         buttonUpgrade.interactable = currentTower.Level < currentTower.MaxLevel ? true : false;
+        print(currentTower.MaxLevel);
     }
 
     public void OnClickEventTowerUpgrade()
@@ -95,6 +98,15 @@ public class TowerDataViewer : MonoBehaviour
         else
         {
             //타워 업그레이드 비용 부족
+            systemTextViewer.PrintText(SystemType.Money);
         }
+    }
+    public void OnClickEventTowerSell()
+    {
+
+        //타워판매
+        currentTower.Sell();
+        // 선택한 타워가 사라져서 Panel, 공격범위 off
+        OffPanel();
     }
 }
