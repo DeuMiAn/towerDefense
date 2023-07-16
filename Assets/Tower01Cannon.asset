@@ -17,18 +17,24 @@ MonoBehaviour:
   weapon:
   - sprite: {fileID: 21300000, guid: 084858d4507e4974ebc38e51256e5d8a, type: 3}
     damage: 1
+    buff: 0
+    slow: 0
     rate: 0.5
     range: 2
     cost: 50
     sell: 25
   - sprite: {fileID: 21300000, guid: 2df46b7316becd74b978d8f03473ea93, type: 3}
     damage: 1.5
+    buff: 0
+    slow: 0
     rate: 0.4
     range: 2.3
     cost: 100
     sell: 75
   - sprite: {fileID: 21300000, guid: 75b8743203fbc874298d4f350eb79932, type: 3}
     damage: 2
+    buff: 0
+    slow: 0
     rate: 0.3
     range: 2.5
     cost: 150
