@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public enum WeaponType {Cannon =0,Laser,Slow,Buff,}
-public enum WeaponState { SearchTarget = 0, TryAttackCannon,TryAttackLaser  }
+public enum WeaponType {Cannon =0,Laser,Slow,Buff, G_Cannon }
+public enum WeaponState { SearchTarget = 0, TryAttackCannon,TryAttackLaser, TryAttack_G_Cannon }
 
 
 public class TowerWeapon : MonoBehaviour
@@ -31,6 +31,10 @@ public class TowerWeapon : MonoBehaviour
     private Transform hitEffect;            //타격효과
     [SerializeField]
     private LayerMask targetLayer;              //광선에 부딪히는 레이어 설정
+
+    [Header("G_Cannon")]
+    [SerializeField]
+    private GameObject projectil_G_Prefab;        //발사체 프리팹
 
 
     /*[SerializeField]
@@ -65,6 +69,9 @@ public class TowerWeapon : MonoBehaviour
     public int MaxLevel => towerTemplate.weapon.Length;
     public float Slow => towerTemplate.weapon[level].slow;
     public float Buff => towerTemplate.weapon[level].buff;
+    public float Splash_Range => towerTemplate.weapon[level].splash_range;
+    public float Splash_Damage => towerTemplate.weapon[level].splash_damage;
+
     public WeaponType WeaponType => weaponType;
     public float AddedDamage
     {
@@ -88,7 +95,7 @@ public class TowerWeapon : MonoBehaviour
         //ChangeState(WeaponState.SearchTarget);
         
         //무기 속성이 캐논, 레이저 일떄
-        if(weaponType==WeaponType.Cannon || weaponType==WeaponType.Laser)
+        if(weaponType==WeaponType.Cannon || weaponType==WeaponType.Laser||weaponType==WeaponType.G_Cannon)
         {
             //최초 상태를 WeaponState.SearchTarget으로 설정
             ChangeState(WeaponState.SearchTarget);
@@ -187,6 +194,11 @@ public class TowerWeapon : MonoBehaviour
                 {
                     ChangeState(WeaponState.TryAttackLaser);
                 }
+                else if (weaponType == WeaponType.G_Cannon)
+                {
+                    ChangeState(WeaponState.TryAttack_G_Cannon);
+                }
+
 
             }
             yield return null;
@@ -244,6 +256,23 @@ public class TowerWeapon : MonoBehaviour
             yield return new WaitForSeconds(towerTemplate.weapon[level].rate);
         }
     }
+    private IEnumerator TryAttack_G_Cannon()
+    {
+        while (true)
+        {
+            //target을 공격하는게 가능한지 검사
+            if (IsPossibleToAttackTarget() == false)
+            {
+                ChangeState(WeaponState.SearchTarget);
+                break;
+            }
+
+            //3. attackRage 시간만큼 대기
+            yield return new WaitForSeconds(towerTemplate.weapon[level].rate);
+            //4. 공격 (발사체 생성)
+            SpawnProjectile();
+        }
+    }
     private Enemy FindClosestAttackTarget()
     {
         //제일 가까이 있는 적을 찾기 위해 최초 거리를 최대한 크게 설정
@@ -284,10 +313,17 @@ public class TowerWeapon : MonoBehaviour
 
     private void SpawnProjectile()
     {
-        GameObject clone=Instantiate(projectilPrefab,spawnPoint.position,Quaternion.identity);
-
-        //공격력 = 타워 기본 공격력 + 버프에 의해 추가된 공격력
-        float damage = towerTemplate.weapon[level].damage + AddedDamage;
+        GameObject clone=null;
+        float damage=0;
+        if (weaponType == WeaponType.G_Cannon)
+        {
+            clone = Instantiate(projectil_G_Prefab, spawnPoint.position, Quaternion.identity);
+        }else if (weaponType == WeaponType.Cannon)
+        {
+            clone = Instantiate(projectilPrefab, spawnPoint.position, Quaternion.identity);
+            //공격력 = 타워 기본 공격력 + 버프에 의해 추가된 공격력
+            damage = towerTemplate.weapon[level].damage + AddedDamage;
+        }
         clone.GetComponent<Projectile>().Setup(attackTarget, damage);
     }
     private void EnableLaser()
