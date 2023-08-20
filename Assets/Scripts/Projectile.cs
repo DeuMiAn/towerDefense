@@ -43,10 +43,22 @@ public class Projectile : MonoBehaviour
         if (collision.transform != target.transform) return; //현재 tartget인 적이 아닐 때
         if (type== ProjecctileType.ExplosiveBomb)
         {
+           ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
+           Explosive explosive = GetComponentInChildren<Explosive>();
+
+           print(splash_range);
+           particleSystem.transform.localScale =new Vector3(splash_range, splash_range, splash_range);
+           gameObject.GetComponentInChildren<ParticleSystem>().Play();
+
+            explosive.onSensorOn();
+
+        }
+        else
+        {
+            Destroy(gameObject); //발사체 오브젝트 삭제
 
         }
         collision.GetComponent<EnemyHP>().TakeDamage(damage);//적 체력을 damage만큼 감소
         //collision.GetComponent<Enemy>().OnDie(); //적 사망 함수 호출
-        Destroy(gameObject); //발사체 오브젝트 삭제
     }
 }

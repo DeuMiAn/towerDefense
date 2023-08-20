@@ -31,7 +31,7 @@ MonoBehaviour:
     slow: 0
     rate: 0.8
     range: 3
-    splash_range: 1.5
+    splash_range: 2
     splash_damage: 3
     cost: 400
     sell: 300
@@ -41,7 +41,7 @@ MonoBehaviour:
     slow: 0
     rate: 0.4
     range: 4
-    splash_range: 2
+    splash_range: 3
     splash_damage: 4
     cost: 500
     sell: 400
