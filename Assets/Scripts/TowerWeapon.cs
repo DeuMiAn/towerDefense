@@ -315,16 +315,24 @@ public class TowerWeapon : MonoBehaviour
     {
         GameObject clone=null;
         float damage=0;
+        float splash_range=0;  // 스플래시 범위
+        float splash_damage=0; // 스플래시 공격력
+
+
         if (weaponType == WeaponType.G_Cannon)
         {
             clone = Instantiate(projectil_G_Prefab, spawnPoint.position, Quaternion.identity);
-        }else if (weaponType == WeaponType.Cannon)
+            splash_range = towerTemplate.weapon[level].splash_range;
+            splash_damage = towerTemplate.weapon[level].splash_damage;
+
+        }
+        else if (weaponType == WeaponType.Cannon)
         {
             clone = Instantiate(projectilPrefab, spawnPoint.position, Quaternion.identity);
             //공격력 = 타워 기본 공격력 + 버프에 의해 추가된 공격력
             damage = towerTemplate.weapon[level].damage + AddedDamage;
         }
-        clone.GetComponent<Projectile>().Setup(attackTarget, damage);
+        clone.GetComponent<Projectile>().Setup(attackTarget, damage, splash_damage, splash_range);
     }
     private void EnableLaser()
     {
