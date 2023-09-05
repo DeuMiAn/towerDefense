@@ -43,14 +43,13 @@ public class Projectile : MonoBehaviour
         if (collision.transform != target.transform) return; //현재 tartget인 적이 아닐 때
         if (type== ProjecctileType.ExplosiveBomb)
         {
-           ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
+          
            Explosive explosive = GetComponentInChildren<Explosive>();
 
            print(splash_range);
-           particleSystem.transform.localScale =new Vector3(splash_range, splash_range, splash_range);
-           gameObject.GetComponentInChildren<ParticleSystem>().Play();
+          
 
-            explosive.onSensorOn();
+            explosive.onExplosive(splash_damage,splash_range);
 
         }
         else
